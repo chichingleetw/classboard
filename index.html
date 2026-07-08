@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>公用便條貼白板｜老師設定</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body class="setup-page">
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">GitHub Pages + Google Sheet</p>
+        <h1>公用便條貼白板</h1>
+        <p class="hero-text">貼上 Google Sheet / Form 設定後，產生學生白板連結與 QR Code。學生匿名新增、拖曳、編輯便條貼，資料會透過 Google Form 寫入 Google Sheet。</p>
+      </section>
+
+      <section class="warning-card">
+        <strong>使用提醒</strong>
+        <span>第一版是公開匿名課堂工具，請勿收集姓名、學號、電話、Email 或任何個資。Google Sheet 設為公開檢視後，知道連結的人可能讀取資料。</span>
+      </section>
+
+      <div class="layout-grid">
+        <form id="setup-form" class="panel form-panel">
+          <div class="section-heading">
+            <p class="eyebrow">Step 1</p>
+            <h2>貼上 Google 設定</h2>
+          </div>
+
+          <label>
+            <span>Google Sheet ID <b>*</b></span>
+            <input name="sheet_id" required placeholder="例如：1aBcD..." autocomplete="off" />
+          </label>
+
+          <div class="two-col">
+            <label>
+              <span>Sheet 名稱</span>
+              <input name="sheet_name" placeholder="例如：表單回應 1" autocomplete="off" />
+            </label>
+            <label>
+              <span>gid</span>
+              <input name="gid" placeholder="例如：0" autocomplete="off" />
+            </label>
+          </div>
+
+          <label>
+            <span>Google Form submit URL <b>*</b></span>
+            <input name="form_url" required placeholder="https://docs.google.com/forms/d/e/.../formResponse" autocomplete="off" />
+          </label>
+
+          <div class="section-heading compact">
+            <p class="eyebrow">Step 2</p>
+            <h2>填入 entry ID</h2>
+          </div>
+
+          <div class="entry-grid">
+            <label><span>board_id <b>*</b></span><input name="field_board_id" required placeholder="entry.xxxxx" /></label>
+            <label><span>note_id <b>*</b></span><input name="field_note_id" required placeholder="entry.xxxxx" /></label>
+            <label><span>action <b>*</b></span><input name="field_action" required placeholder="entry.xxxxx" /></label>
+            <label><span>text <b>*</b></span><input name="field_text" required placeholder="entry.xxxxx" /></label>
+            <label><span>x <b>*</b></span><input name="field_x" required placeholder="entry.xxxxx" /></label>
+            <label><span>y <b>*</b></span><input name="field_y" required placeholder="entry.xxxxx" /></label>
+            <label><span>width <b>*</b></span><input name="field_width" required placeholder="entry.xxxxx" /></label>
+            <label><span>height <b>*</b></span><input name="field_height" required placeholder="entry.xxxxx" /></label>
+            <label><span>color <b>*</b></span><input name="field_color" required placeholder="entry.xxxxx" /></label>
+            <label><span>z_index <b>*</b></span><input name="field_z_index" required placeholder="entry.xxxxx" /></label>
+            <label class="wide"><span>timestamp_client <b>*</b></span><input name="field_timestamp_client" required placeholder="entry.xxxxx" /></label>
+          </div>
+
+          <div class="actions">
+            <button class="primary-btn" type="submit">產生白板連結</button>
+            <button class="ghost-btn" type="button" id="reset-board-id">重產 board_id</button>
+          </div>
+        </form>
+
+        <aside class="panel guide-panel">
+          <div class="section-heading">
+            <p class="eyebrow">快速教學</p>
+            <h2>老師準備方式</h2>
+          </div>
+          <ol class="guide-list">
+            <li>建立 Google Form，欄位依序為 board_id、note_id、action、text、x、y、width、height、color、z_index、timestamp_client。</li>
+            <li>將表單回應連結到 Google Sheet，並把 Sheet 設為「知道連結的人可以檢視」。</li>
+            <li>從表單原始碼或預填連結取得每個欄位的 <code>entry.xxxxx</code>。</li>
+            <li>Form URL 使用 <code>/formResponse</code> 結尾的 submit endpoint。</li>
+            <li>產生連結後投影老師白板，學生掃 QR Code 進入同一張白板。</li>
+          </ol>
+        </aside>
+      </div>
+
+      <section id="result-panel" class="panel result-panel hidden" aria-live="polite">
+        <div class="section-heading">
+          <p class="eyebrow">Step 3</p>
+          <h2>分享白板</h2>
+        </div>
+        <div class="result-layout">
+          <div>
+            <label>
+              <span>學生連結</span>
+              <textarea id="student-link" readonly rows="4"></textarea>
+            </label>
+            <div class="actions">
+              <button class="primary-btn" id="copy-link" type="button">複製連結</button>
+              <a class="ghost-btn as-link" id="open-board" href="./board.html">開啟老師白板</a>
+            </div>
+            <p id="copy-status" class="status-line"></p>
+          </div>
+          <div class="qr-wrap">
+            <div id="qr-code" class="qr-code" aria-label="白板 QR Code"></div>
+            <p>學生掃描後即可進入同一張匿名白板。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="module" src="./js/index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>公用便條貼白板</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body class="board-page">
+    <div id="config-error" class="config-error hidden">
+      <h1>白板設定不完整</h1>
+      <p>請回到老師設定頁重新產生連結，確認 Google Sheet、Google Form 與 entry ID 都已填寫。</p>
+      <a class="primary-btn as-link" href="./index.html">回到老師設定頁</a>
+    </div>
+
+    <main id="board-app" class="board-app hidden">
+      <header class="toolbar">
+        <div>
+          <p class="eyebrow">匿名協作白板</p>
+          <h1>公用便條貼白板</h1>
+        </div>
+        <div class="toolbar-actions">
+          <button class="primary-btn" id="add-note" type="button">新增便條貼</button>
+          <button class="ghost-btn" id="refresh-board" type="button">重新同步</button>
+          <span id="sync-status" class="sync-pill">尚未同步</span>
+          <span id="note-count" class="sync-pill">0 張</span>
+        </div>
+      </header>
+
+      <section id="board" class="board" aria-label="便條貼白板">
+        <div class="empty-state" id="empty-state">
+          <h2>這裡還沒有便條貼</h2>
+          <p>按「新增便條貼」開始，或等待其他同學送出想法。</p>
+        </div>
+      </section>
+    </main>
+
+    <template id="note-template">
+      <article class="note">
+        <div class="note-toolbar">
+          <select class="note-color" aria-label="便條貼顏色">
+            <option value="yellow">黃色</option>
+            <option value="pink">粉紅</option>
+            <option value="blue">藍色</option>
+            <option value="green">綠色</option>
+            <option value="purple">紫色</option>
+            <option value="orange">橘色</option>
+          </select>
+          <button class="icon-btn edit-note" type="button" aria-label="編輯">編輯</button>
+          <button class="icon-btn delete-note" type="button" aria-label="刪除">刪除</button>
+        </div>
+        <div class="note-text" tabindex="0"></div>
+        <textarea class="note-editor" rows="4"></textarea>
+        <div class="resize-handle" aria-hidden="true"></div>
+      </article>
+    </template>
+
+    <script type="module" src="./js/board.js"></script>
+  </body>
+</html>
