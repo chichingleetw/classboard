@@ -112,6 +112,22 @@ h2 {
   white-space: nowrap;
 }
 
+.demo-banner {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px clamp(16px, 4vw, 34px);
+  border-bottom: 1px solid rgba(107, 91, 59, 0.14);
+  background: rgba(255, 253, 242, 0.78);
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.demo-banner strong {
+  color: var(--accent-strong);
+  white-space: nowrap;
+}
+
 .layout-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.75fr);
@@ -359,6 +375,10 @@ code {
   background-size: 32px 32px, 32px 32px, auto;
 }
 
+.demo-board {
+  min-height: calc(100vh - 145px);
+}
+
 .empty-state {
   position: absolute;
   left: 50%;
@@ -516,6 +536,11 @@ code {
 
   .toolbar-actions {
     justify-content: flex-start;
+  }
+
+  .demo-banner {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .primary-btn,

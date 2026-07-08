@@ -4,6 +4,7 @@
 
 ## 功能
 
+- 可直接試玩的展示頁：`demo.html`，資料保存在瀏覽器 localStorage。
 - 老師設定頁：輸入 Google Sheet、Google Form 與欄位 entry ID。
 - 產生學生白板連結與 QR Code。
 - 學生白板頁：新增、編輯、拖曳、縮放、刪除便條貼。
@@ -16,12 +17,14 @@
 ```text
 .
 ├── index.html
+├── demo.html
 ├── board.html
 ├── css/
 │   └── styles.css
 ├── js/
 │   ├── board.js
 │   ├── config.js
+│   ├── demo.js
 │   ├── google-form.js
 │   ├── google-sheet.js
 │   ├── index.js
