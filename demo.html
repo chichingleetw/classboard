@@ -9,13 +9,19 @@
   <body class="board-page demo-page">
     <main id="board-app" class="board-app">
       <header class="toolbar">
-        <div>
-          <p class="eyebrow">免設定展示版</p>
-          <h1>公用便條貼白板</h1>
+        <div class="toolbar-title-row">
+          <div class="toolbar-title">
+            <p class="eyebrow">免設定展示版</p>
+            <h1>公用便條貼白板</h1>
+          </div>
+          <button class="primary-btn add-note-btn" id="add-note" type="button" aria-label="新增便條貼">
+            <span class="add-note-label">新增便條貼</span>
+            <span class="add-note-plus" aria-hidden="true">+</span>
+          </button>
+          <button class="toolbar-menu-toggle" type="button" aria-label="開啟工具選單" aria-expanded="false" aria-controls="demo-toolbar-menu" data-toolbar-menu-toggle>☰</button>
         </div>
-        <div class="toolbar-actions">
+        <div class="toolbar-actions toolbar-menu" id="demo-toolbar-menu" data-toolbar-menu>
           <a class="ghost-btn as-link" href="./index.html">正式設定頁</a>
-          <button class="primary-btn" id="add-note" type="button">新增便條貼</button>
           <button class="ghost-btn" id="reset-demo" type="button">重設展示</button>
           <span id="sync-status" class="sync-pill">本機展示模式</span>
           <span id="note-count" class="sync-pill">0 張</span>

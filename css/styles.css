@@ -368,8 +368,34 @@ code {
   backdrop-filter: blur(14px);
 }
 
+.toolbar-title-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.toolbar-title {
+  min-width: 0;
+}
+
 .toolbar h1 {
   font-size: clamp(1.4rem, 3vw, 2.4rem);
+}
+
+.add-note-plus {
+  display: none;
+}
+
+.toolbar-menu-toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fffdf7;
+  color: var(--accent-strong);
+  font-size: 1.28rem;
+  font-weight: 900;
 }
 
 .toolbar-actions {
@@ -585,15 +611,83 @@ code {
   .toolbar {
     align-items: stretch;
     flex-direction: column;
+    gap: 8px;
+    padding: 8px 10px;
   }
 
-  .toolbar-actions {
-    justify-content: flex-start;
+  .toolbar-title-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 38px 38px;
+    gap: 8px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .toolbar .eyebrow {
+    display: none;
+  }
+
+  .toolbar h1 {
+    overflow: hidden;
+    font-size: clamp(1.12rem, 5.4vw, 1.45rem);
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .toolbar .add-note-btn {
+    display: inline-flex;
+    width: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    height: 38px;
+    justify-content: center;
+    padding: 0;
+    border-radius: 14px;
+    font-size: 1.5rem;
+    line-height: 1;
+    box-shadow: 0 8px 16px rgba(36, 107, 85, 0.18);
+  }
+
+  .add-note-label {
+    display: none;
+  }
+
+  .add-note-plus {
+    display: inline;
+  }
+
+  .toolbar-menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+  }
+
+  .toolbar-actions,
+  .toolbar-actions.is-open {
+    justify-content: stretch;
   }
 
   .demo-banner {
     align-items: flex-start;
     flex-direction: column;
+    gap: 4px;
+    padding: 8px 10px;
+    font-size: 0.86rem;
+  }
+
+  .toolbar-actions {
+    display: none;
+    width: 100%;
+    gap: 8px;
+    padding-top: 6px;
+  }
+
+  .toolbar-actions.is-open {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
   .primary-btn,
@@ -602,8 +696,25 @@ code {
     justify-content: center;
   }
 
+  .toolbar .add-note-btn {
+    width: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    height: 38px;
+  }
+
   .sync-pill {
     flex: 1;
     justify-content: center;
+    min-height: 34px;
+    font-size: 0.82rem;
+  }
+
+  .board {
+    min-height: calc(100vh - 55px);
+  }
+
+  .demo-board {
+    min-height: calc(100vh - 110px);
   }
 }
