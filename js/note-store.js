@@ -11,7 +11,7 @@ export function reduceEventsToNotes(events, boardId) {
     });
 
   return Array.from(latestByNote.values())
-    .filter((event) => event.action !== 'delete')
+    .filter(isVisibleEvent)
     .map((event) => ({
       note_id: event.note_id,
       text: event.text,
@@ -25,6 +25,11 @@ export function reduceEventsToNotes(events, boardId) {
       deleted: false,
     }))
     .sort((a, b) => a.z_index - b.z_index);
+}
+
+function isVisibleEvent(event) {
+  const action = String(event.action || '').trim().toLowerCase();
+  return action !== 'delete' && action !== 'hide' && action !== 'hidden';
 }
 
 function compareEvents(a, b) {

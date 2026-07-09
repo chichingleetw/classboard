@@ -42,10 +42,12 @@ const emptyState = document.querySelector('#empty-state');
 const noteTemplate = document.querySelector('#note-template');
 const addNoteButton = document.querySelector('#add-note');
 const resetDemoButton = document.querySelector('#reset-demo');
+const clearBoardButton = document.querySelector('#clear-board');
 const syncStatus = document.querySelector('#sync-status');
 const noteCount = document.querySelector('#note-count');
 
 const notes = new Map();
+const hiddenNotes = new Map();
 const editingNotes = new Set();
 let maxZIndex = 1;
 
@@ -56,10 +58,18 @@ function boot() {
   enableUiVisibility(document);
   addNoteButton.addEventListener('click', createNote);
   resetDemoButton.addEventListener('click', resetDemo);
+  clearBoardButton.addEventListener('click', clearBoard);
 
   const saved = loadNotes();
   const initialNotes = saved.length > 0 ? saved : STARTER_NOTES;
-  initialNotes.forEach((note) => upsertNote(note));
+  initialNotes.forEach((note) => {
+    if (note.visible === false) {
+      hiddenNotes.set(note.note_id, { ...note, visible: false });
+      return;
+    }
+
+    upsertNote({ ...note, visible: true });
+  });
   persist();
   updateBoardMeta();
 }
@@ -75,6 +85,7 @@ function createNote() {
     height: 120,
     color: 'yellow',
     z_index: nextZIndex(),
+    visible: true,
   };
 
   upsertNote(note);
@@ -86,10 +97,31 @@ function resetDemo() {
   if (!window.confirm('確定要重設展示資料嗎？')) return;
   notes.forEach((note) => note.element.remove());
   notes.clear();
+  hiddenNotes.clear();
   maxZIndex = 1;
-  STARTER_NOTES.forEach((note) => upsertNote({ ...note }));
+  STARTER_NOTES.forEach((note) => upsertNote({ ...note, visible: true }));
   persist();
   setStatus('展示資料已重設');
+}
+
+function clearBoard() {
+  const visibleNotes = Array.from(notes.values());
+  if (visibleNotes.length === 0) {
+    setStatus('目前沒有可清除的便條貼');
+    return;
+  }
+
+  if (!window.confirm(`確定要清除目前 ${visibleNotes.length} 張便條貼嗎？展示資料會保留為隱藏狀態。`)) return;
+
+  for (const note of visibleNotes) {
+    note.element.remove();
+    notes.delete(note.note_id);
+    hiddenNotes.set(note.note_id, { ...toSerializableNote(note), visible: false });
+  }
+
+  persist();
+  updateBoardMeta();
+  setStatus('已標記為隱藏，不再顯示');
 }
 
 function upsertNote(note) {
@@ -99,6 +131,7 @@ function upsertNote(note) {
     ...existing,
     ...note,
     element,
+    visible: note.visible !== false,
   };
 
   notes.set(note.note_id, state);
@@ -288,10 +321,17 @@ function beginResize(event, noteId) {
 }
 
 function persist() {
-  const serializable = Array.from(notes.values()).map(({ element, ...note }) => note);
+  const serializable = [
+    ...Array.from(hiddenNotes.values()),
+    ...Array.from(notes.values()).map(toSerializableNote),
+  ];
   localStorage.setItem(STORAGE_KEY, JSON.stringify(serializable));
   setStatus('已儲存在本機瀏覽器');
   updateBoardMeta();
+}
+
+function toSerializableNote({ element, ...note }) {
+  return { ...note, visible: note.visible !== false };
 }
 
 function loadNotes() {

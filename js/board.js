@@ -16,12 +16,14 @@ const emptyState = document.querySelector('#empty-state');
 const noteTemplate = document.querySelector('#note-template');
 const addNoteButton = document.querySelector('#add-note');
 const refreshButton = document.querySelector('#refresh-board');
+const clearBoardButton = document.querySelector('#clear-board');
 const syncStatus = document.querySelector('#sync-status');
 const noteCount = document.querySelector('#note-count');
 
 const parsed = buildConfigFromParams();
 const notes = new Map();
 const editingNotes = new Set();
+const pendingHiddenNotes = new Set();
 let config;
 let syncTimer;
 let maxZIndex = 1;
@@ -39,6 +41,7 @@ function boot() {
   enableUiVisibility(boardApp);
   addNoteButton.addEventListener('click', createNote);
   refreshButton.addEventListener('click', () => syncFromSheet({ manual: true }));
+  clearBoardButton.addEventListener('click', clearBoard);
   syncFromSheet();
   syncTimer = window.setInterval(syncFromSheet, SYNC_INTERVAL_MS);
   window.addEventListener('beforeunload', () => window.clearInterval(syncTimer));
@@ -62,8 +65,15 @@ function mergeRemoteNotes(remoteNotes) {
   const remoteIds = new Set(remoteNotes.map((note) => note.note_id));
 
   for (const note of remoteNotes) {
+    if (pendingHiddenNotes.has(note.note_id)) continue;
     if (editingNotes.has(note.note_id)) continue;
     upsertNote(note, { submit: false });
+  }
+
+  for (const noteId of pendingHiddenNotes) {
+    if (!remoteIds.has(noteId)) {
+      pendingHiddenNotes.delete(noteId);
+    }
   }
 
   for (const [noteId, note] of notes) {
@@ -222,6 +232,35 @@ async function deleteNote(noteId) {
   notes.delete(noteId);
   updateBoardMeta();
   await submitDeletedEvent(note);
+}
+
+async function clearBoard() {
+  const visibleNotes = Array.from(notes.values());
+  if (visibleNotes.length === 0) {
+    setSyncStatus('目前沒有可清除的便條貼。');
+    return;
+  }
+
+  if (!window.confirm(`確定要清除目前 ${visibleNotes.length} 張便條貼嗎？資料會保留為隱藏狀態，不會真的刪除。`)) return;
+
+  for (const note of visibleNotes) {
+    pendingHiddenNotes.add(note.note_id);
+    note.element.remove();
+    notes.delete(note.note_id);
+  }
+
+  updateBoardMeta();
+  setSyncStatus('正在送出隱藏狀態...');
+
+  const results = await Promise.allSettled(visibleNotes.map((note) => submitEvent(config, toEvent(note, 'hide'))));
+  const failedCount = results.filter((result) => result.status === 'rejected').length;
+
+  if (failedCount > 0) {
+    setSyncStatus(`已清除畫面，但有 ${failedCount} 張可能未成功送出隱藏狀態。`, true);
+    return;
+  }
+
+  setSyncStatus('已清除畫面，所有便條貼已標記為隱藏。');
 }
 
 function beginDrag(event, noteId) {
