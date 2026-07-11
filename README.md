@@ -2,6 +2,11 @@
 
 這是一個可部署在 GitHub Pages 的匿名便條貼白板。它不需要後端、不需要登入，使用 Google Form 寫入事件紀錄，並從公開 Google Sheet 讀取資料還原目前白板狀態。
 
+## 線上使用
+
+- 直接使用的 demo 試玩版網址：https://chichingleetw.github.io/classboard/demo.html
+- 直接使用的網址：https://chichingleetw.github.io/classboard/index.html
+
 ![簡介圖](簡介圖.png)
 
 ## 功能
